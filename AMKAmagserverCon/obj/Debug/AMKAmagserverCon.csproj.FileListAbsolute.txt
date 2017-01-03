@@ -1,0 +1,14 @@
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\AMKAmagserverCon.exe.config
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\AMKAmagserverCon.exe
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\AMKAmagserverCon.pdb
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.exe
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.pdb
+c:\users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.csproj.ResolveComReference.cache
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\AMKAmagserverCon.exe.manifest
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\AMKAmagserverCon.application
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.exe.manifest
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.application
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\zxing.dll
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\zxing.pdb
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\bin\Debug\zxing.xml
+C:\Users\sidki\documents\visual studio 2017\Projects\AMKAmagserverCon\AMKAmagserverCon\obj\Debug\AMKAmagserverCon.csprojResolveAssemblyReference.cache
