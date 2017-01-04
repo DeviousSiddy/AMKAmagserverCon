@@ -96,20 +96,20 @@ namespace AMKAmagserverCon
                             Console.WriteLine("Received : " + msgPacket[0] + " " + msgPacket[1] + " " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt") + " door " + msgPacket[2]);
                                 //buffer = Encoding.ASCII.GetBytes("Received.");
                                 //nwStream.Write(buffer, 0, buffer.Length);
-                                nwStream.Write(buffer, 0, bytesRead);
+                                //nwStream.Write(buffer, 0, bytesRead);
                             //nwStream.Flush();
-                            String lastitem = "";
-                                //if (msgPacket[4].Contains("0"))
-                                {
-                                    lastitem = Excelwrite(itemsi[0], msgPacket[1], Int32.Parse(itemsi[1]));
-                                }
+                            String lastitem = Excelwrite(itemsi[0], msgPacket[1], Int32.Parse(itemsi[1]));
                                 //---write back the text to the client---
 
                                 lastitem = lastitem + " " + msgPacket[1];
-                                //buffer = Encoding.ASCII.GetBytes(lastitem);
-                                //nwStream = client.GetStream();
-                                //nwStream.Write(buffer, 0, bytesRead);
-                                Console.WriteLine("Sending back : " + lastitem + " \n");
+                                buffer = Encoding.ASCII.GetBytes(lastitem);
+                            //nwStream = client.GetStream();
+
+                            StreamWriter sw = new StreamWriter(nwStream);
+                            sw.WriteLine(lastitem, 0, buffer.Length);
+                            sw.Flush();
+                            nwStream.Flush();
+                                Console.WriteLine("Sending back : " + lastitem + " - buffer: " + buffer + " \n");
                                 //---get the incoming data through a network stream---
                                 break;
                         case 2: //TODO fix nwstream
