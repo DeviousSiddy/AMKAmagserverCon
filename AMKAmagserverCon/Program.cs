@@ -20,6 +20,7 @@ namespace AMKAmagserverCon
     {
         const int PORT_NO = 4444;
         const string SERVER_IP = "127.0.0.1";
+        bool batch2 = false;
 
         
         static void Main(string[] args)
@@ -64,6 +65,7 @@ namespace AMKAmagserverCon
 
                     if (!client.Connected)
                     {
+
                         client.Close();
                         client = listener.AcceptTcpClient();
                         Console.WriteLine("Listening...\n");
@@ -76,6 +78,7 @@ namespace AMKAmagserverCon
 
                 //---read incoming stream---
                 int bytesRead = nwStream.Read(buffer, 0, client.ReceiveBufferSize);
+                nwStream.Flush();
 
                 //---convert the data received into a string---
                 string dataReceived = Encoding.ASCII.GetString(buffer, 0, bytesRead);
@@ -84,20 +87,21 @@ namespace AMKAmagserverCon
                 {
                     
                     string s = msgPacket[4];
-                    
+                    Console.Write("Mode: "+s);
                     int i = Int32.Parse(s);
                     switch (i)
                         {
                             case 0:
-                                
-                                Console.WriteLine("Received : " + msgPacket[0] + " " + msgPacket[1] + " " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt") + " door " + msgPacket[2]);
+                            string[] itemsi = msgPacket[0].Split(':');
+                            Console.WriteLine("Received : " + msgPacket[0] + " " + msgPacket[1] + " " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt") + " door " + msgPacket[2]);
                                 //buffer = Encoding.ASCII.GetBytes("Received.");
                                 //nwStream.Write(buffer, 0, buffer.Length);
                                 nwStream.Write(buffer, 0, bytesRead);
-                                String lastitem = "";
+                            //nwStream.Flush();
+                            String lastitem = "";
                                 //if (msgPacket[4].Contains("0"))
                                 {
-                                    lastitem = Excelwrite(msgPacket[0], msgPacket[1]);
+                                    lastitem = Excelwrite(itemsi[0], msgPacket[1], Int32.Parse(itemsi[1]));
                                 }
                                 //---write back the text to the client---
 
@@ -108,33 +112,36 @@ namespace AMKAmagserverCon
                                 Console.WriteLine("Sending back : " + lastitem + " \n");
                                 //---get the incoming data through a network stream---
                                 break;
-                        case 2:
+                        case 2: //TODO fix nwstream
                             string[] items = msgPacket[0].Split(';');
+                            Console.WriteLine(items[0]);
                             string lastitem2 = "";
-                            string[] item = null;
-                            for (int x = 0; x > items.Length; x++)
+                            string[] item;
+                            for (int x = 0; x < items.Length; x++)
                             {
                                 item = items[x].Split(':');
-                                Console.WriteLine("Received : " + item[0] + " " + msgPacket[1] + " " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt") + " door " + msgPacket[2]);
-                                //buffer = Encoding.ASCII.GetBytes("Received.");
-                                //nwStream.Write(buffer, 0, buffer.Length);
-                                nwStream.Write(buffer, 0, bytesRead);
+                                Console.WriteLine("Received : " +item[1]+"x "+ item[0] + " " + msgPacket[1] + " " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt") + " door " + msgPacket[2]);
+                                buffer = Encoding.ASCII.GetBytes("Received.");
                                 
+                                nwStream.Write(buffer, 0, buffer.Length);
+                                //nwStream.Write(buffer, 0, bytesRead);
+                                //nwStream.Flush();
                                 //if (msgPacket[4].Contains("0"))
                                 {
-                                    lastitem2 = Excelwrite(item[0], msgPacket[1]);
+                                    lastitem2 = Excelwrite(item[0], msgPacket[1], msgPacket[3] ,Int32.Parse(item[1]));
                                 }
                                 //---write back the text to the client---
 
                                 lastitem2 = lastitem2 + " " + msgPacket[1];
-                                //buffer = Encoding.ASCII.GetBytes(lastitem);
-                                //nwStream = client.GetStream();
-                                //nwStream.Write(buffer, 0, bytesRead);
+                                buffer = Encoding.ASCII.GetBytes(lastitem2);
+                                nwStream = client.GetStream();
+                                nwStream.Write(buffer, 0, buffer.Length);
+                                nwStream.Flush();
                                 Console.WriteLine("Sending back : " + lastitem2 + " \n");
                                 //---get the incoming data through a network stream---
 
                             }
-
+                            
                             break;
                             case 4:
                                 
@@ -162,6 +169,15 @@ namespace AMKAmagserverCon
         }
         public static string Excelwrite(String idnum, String checkinout)
         {
+            return Excelwrite(idnum,checkinout,"AMKA",1);
+        }
+        public static string Excelwrite(String idnum, String checkinout,int aantal)
+        {
+            return Excelwrite(idnum, checkinout, "AMKA", aantal);
+        }
+        public static string Excelwrite(String idnum, String checkinout,String klant_naam, int aantal)
+        {
+            
             Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
             Excel.Application xlAppin = null;
             Excel.Application xlAppuit = null;
@@ -172,7 +188,7 @@ namespace AMKAmagserverCon
             {
                 inout = true;
             }
-            else if (checkinout.Contains("out") || checkinout.Contains("uit"))
+            else if (checkinout.Contains("out"))
             {
                 inout = false;
                 
@@ -193,18 +209,33 @@ namespace AMKAmagserverCon
             string curFile = @"c:\AMKA\totaalmag.xls";
             string curFilein = @"c:\AMKA\In\00000000StandaardIn.xls";
             string curFileuit = @"c:\AMKA\Uit\00000000StandaardUit.xls";
+            string in_xcel = @"c:\AMKA\In\" + DateTime.Now.ToString("yyyyMMdd") + "In.xls";
+            string upperklant =  klant_naam.ToUpper();
+            string uit_dir = @"c:\AMKA\Uit\Klant\" + upperklant + @"\";
+            string uit_xcel = uit_dir + DateTime.Now.ToString("yyyyMMdd") + "Uit.xls";
+            
 
             if (!File.Exists(curFile) || !File.Exists(curFilein) || !File.Exists(curFileuit))
             {
                 ExcelInit();
             }
-            if (File.Exists(@"c:\AMKA\In\" + DateTime.Now.ToString("yyyyMMdd") + "In.xls"))
+            if (inout)
             {
-                curFilein = @"c:\AMKA\In\" + DateTime.Now.ToString("yyyyMMdd") + "In.xls";
+                if (File.Exists(in_xcel))
+                {
+                    curFilein = in_xcel;
+                }
             }
-            if (File.Exists(@"c:\AMKA\Uit\" + DateTime.Now.ToString("yyyyMMdd") + "Uit.xls"))
+            else
             {
-                curFileuit = @"c:\AMKA\Uit\" + DateTime.Now.ToString("yyyyMMdd") + "Uit.xls";
+                if (!Directory.Exists(uit_dir))
+                {
+                    Directory.CreateDirectory(uit_dir);
+                }
+                if (File.Exists(uit_xcel))
+                {
+                    curFileuit = uit_xcel;
+                }
             }
 
             xlWorkBook = xlApp.Workbooks.Open(curFile);
@@ -221,7 +252,7 @@ namespace AMKAmagserverCon
             Excel.Range lara = null;
             //int numberOfColumns = 0;
             //int numberOfRows = 0;
-            Excel.Range Items = xlApp.get_Range("A1", "A200");
+            Excel.Range Items = xlApp.get_Range("A1", "A300");
             Excel.Range Itemsin = null;
             Excel.Range Itemsuit = null;
 
@@ -315,22 +346,22 @@ namespace AMKAmagserverCon
             //Put the row and column address in the cell.
             if (inout)
             {
-                Console.WriteLine("+" + 1);
+                Console.WriteLine("+" + aantal);
                 
-                editframe.Value2 = editframe.Value2 + 1;
+                editframe.Value2 = editframe.Value2 + aantal;
                 editframein = currentFindin.Offset[0, 2];
-                editframein.Value2 = editframein.Value2 + 1;
+                editframein.Value2 = editframein.Value2 + aantal;
                 Console.WriteLine("Totaal in magazijn: " + editframe.Value2);
                 Console.WriteLine(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt"));
 
             }
             else
             {
-                Console.WriteLine("-" + 1);
+                Console.WriteLine("-" + aantal);
                 
-                editframe.Value2 = editframe.Value2 - 1;
+                editframe.Value2 = editframe.Value2 - aantal;
                 editframeuit = currentFinduit.Offset[0, 2];
-                editframeuit.Value2 = editframeuit.Value2 + 1;
+                editframeuit.Value2 = editframeuit.Value2 + aantal;
                 Console.WriteLine("Totaal in magazijn: "+ editframe.Value2);
                 Console.WriteLine(DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss tt"));
             }
@@ -365,9 +396,9 @@ namespace AMKAmagserverCon
             Marshal.ReleaseComObject(xlApp);
             if (inout)
             {
-                if (!File.Exists(@"c:\AMKA\In\" + DateTime.Now.ToString("yyyyMMdd") + "In.xls"))
+                if (!File.Exists(in_xcel))
                 {
-                    xlWorkBookIn.SaveAs(@"c:\AMKA\In\" + DateTime.Now.ToString("yyyyMMdd") + "In.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                    xlWorkBookIn.SaveAs(in_xcel, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 }
                 else
                 {
@@ -381,10 +412,10 @@ namespace AMKAmagserverCon
             }
             else
             {
-                if (!File.Exists(@"c:\AMKA\Uit\" + DateTime.Now.ToString("yyyyMMdd") + "Uit.xls"))
+                if (!File.Exists(uit_xcel))
                 {
                     
-                    xlWorkBookUit.SaveAs(@"c:\AMKA\Uit\" + DateTime.Now.ToString("yyyyMMdd") + "Uit.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                    xlWorkBookUit.SaveAs(uit_xcel, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 }
                 else
                 {
@@ -423,6 +454,7 @@ namespace AMKAmagserverCon
                 Directory.CreateDirectory(@"c:\AMKA\");
                 Directory.CreateDirectory(@"c:\AMKA\In");
                 Directory.CreateDirectory(@"c:\AMKA\Uit");
+                Directory.CreateDirectory(@"c:\AMKA\Uit\Klant");
                 Directory.CreateDirectory(@"c:\AMKA\QRcode");
                 Console.WriteLine("Created Directory");
             }
@@ -445,7 +477,7 @@ namespace AMKAmagserverCon
                 xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
                 xlWorkSheet.Cells[1, 1] = "ID";     xlWorkSheet.Cells[1, 2] = "Item";                   xlWorkSheet.Cells[1, 3] = "Pakken";
-                xlWorkSheet.Cells[2, 1] = "STR0001";   xlWorkSheet.Cells[2, 2] = "Cola Stroop 350ml";    xlWorkSheet.Cells[2, 3] = "0";
+                xlWorkSheet.Cells[2, 1] = "ST0001";   xlWorkSheet.Cells[2, 2] = "Cola Stroop 350ml";    xlWorkSheet.Cells[2, 3] = "0";
                 xlWorkSheet.Cells[3, 1] = "AZ0002";   xlWorkSheet.Cells[3, 2] = "Azijn 350ml";          xlWorkSheet.Cells[3, 3] = "0";
                 xlWorkSheet.Cells[4, 1] = "KJ0003";   xlWorkSheet.Cells[4, 2] = "Ketjap 350ml";         xlWorkSheet.Cells[4, 3] = "0";
                 if (!File.Exists(curFile))
@@ -460,18 +492,23 @@ namespace AMKAmagserverCon
                 {
                     xlWorkBook.SaveAs(curFileuit, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 }
-                for (int i = 2; i<=4; i++)
+                for (int i = 2; i<=200; i++)
                 {
-                    String s = xlWorkSheet.Cells[i, 1].Value;
-                    String s2 = xlWorkSheet.Cells[i, 2].Value;
-                    
-                    Bitmap qrcode = GenerateQR(300, 300, s);
-                    if (!File.Exists(@"c:\AMKA\QRcode\" + s +" "+ s2+ ".jpeg"))
+                    if (xlWorkSheet.Cells[i, 1].Value != null)
                     {
-                        qrcode.Save(@"c:\AMKA\QRcode\" + s +" "+ s2+ ".jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);                        
-                    }
+                        //if (Regex.IsMatch(xlWorkSheet.Cells[i, 1].Value, "^[A - Z]{ 2}\\d{ 4}")) //TODO regex check + create missing QR.
+                        {
 
-                    
+                            String s = xlWorkSheet.Cells[i, 1].Value;
+                            String s2 = xlWorkSheet.Cells[i, 2].Value;
+
+                            Bitmap qrcode = GenerateQR(300, 300, s);
+                            if (!File.Exists(@"c:\AMKA\QRcode\" + s + " " + s2 + ".jpeg"))
+                            {
+                                qrcode.Save(@"c:\AMKA\QRcode\" + s + " " + s2 + ".jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                            }
+                        }
+                    }
                 }
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();

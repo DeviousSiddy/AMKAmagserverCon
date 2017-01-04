@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="AMKAmagserverCon.exe" version="1.0.0.4" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="AMKAmagserverCon.exe" version="1.0.0.5" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="AMKAmagserverCon" version="1.0.6205.36158" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="AMKAmagserverCon" version="1.0.6212.36353" language="neutral" processorArchitecture="msil" />
     <commandLine file="AMKAmagserverCon.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AMKAmagserverCon.exe" size="22456">
-      <assemblyIdentity name="AMKAmagserverCon" version="1.0.6205.36158" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AMKAmagserverCon.exe" size="23480">
+      <assemblyIdentity name="AMKAmagserverCon" version="1.0.6212.36353" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>JEzM+bAocKyHrsT12lQOoxyTKfE7rlLkqdZx/j+ezIA=</dsig:DigestValue>
+        <dsig:DigestValue>tyMf3SIjfGTleFkfUH2TI4BiDlvyOHJt4WN2bsC1GbM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
