@@ -102,9 +102,6 @@ namespace AMKAmagserverCon
                                 //---write back the text to the client---
 
                                 lastitem = lastitem + " " + msgPacket[1];
-                                buffer = Encoding.ASCII.GetBytes(lastitem);
-                            //nwStream = client.GetStream();
-
                             StreamWriter sw = new StreamWriter(nwStream);
                             sw.WriteLine(lastitem, 0, buffer.Length);
                             sw.Flush();
