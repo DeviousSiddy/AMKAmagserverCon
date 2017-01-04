@@ -101,7 +101,7 @@ namespace AMKAmagserverCon
                             String lastitem = Excelwrite(itemsi[0], msgPacket[1], Int32.Parse(itemsi[1]));
                                 //---write back the text to the client---
 
-                                lastitem = lastitem + " " + msgPacket[1];
+                                lastitem = itemsi[1] + "x "+lastitem + " " + msgPacket[1];
                             StreamWriter sw = new StreamWriter(nwStream);
                             sw.WriteLine(lastitem, 0, buffer.Length);
                             sw.Flush();
@@ -129,16 +129,16 @@ namespace AMKAmagserverCon
                                 }
                                 //---write back the text to the client---
 
-                                lastitem2 = lastitem2 + " " + msgPacket[1];
-                                buffer = Encoding.ASCII.GetBytes(lastitem2);
-                                nwStream = client.GetStream();
-                                nwStream.Write(buffer, 0, buffer.Length);
-                                nwStream.Flush();
+                                lastitem2 = item[1] + "x " + lastitem2 + " " + msgPacket[1];
+                                StreamWriter sw2 = new StreamWriter(nwStream);
+                                sw2.WriteLine(lastitem2, 0, buffer.Length);
+                                sw2.Flush();
+                                
                                 Console.WriteLine("Sending back : " + lastitem2 + " \n");
                                 //---get the incoming data through a network stream---
 
                             }
-                            
+                            nwStream.Flush();
                             break;
                             case 4:
                                 

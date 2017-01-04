@@ -3,7 +3,7 @@
   <asmv1:assemblyIdentity name="AMKAmagserverCon.exe" version="1.0.0.5" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="AMKAmagserverCon" version="1.0.6212.36353" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="AMKAmagserverCon" version="1.0.6213.417" language="neutral" processorArchitecture="msil" />
     <commandLine file="AMKAmagserverCon.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AMKAmagserverCon.exe" size="23480">
-      <assemblyIdentity name="AMKAmagserverCon" version="1.0.6212.36353" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="AMKAmagserverCon.exe" size="23992">
+      <assemblyIdentity name="AMKAmagserverCon" version="1.0.6213.417" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tyMf3SIjfGTleFkfUH2TI4BiDlvyOHJt4WN2bsC1GbM=</dsig:DigestValue>
+        <dsig:DigestValue>CiNuc+2qroqg4V5Hz0yBvXsh1dRcIgViVl/LRIBD/3M=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
